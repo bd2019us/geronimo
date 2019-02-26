@@ -309,13 +309,16 @@ public class SnapshotDBHelper {
             }
             // for each snapshot time, remove all instances that is associated with in 
             // in the active DB
+			PreparedStatement stmt = conn.prepareStatement("DELETE FROM Statistics WHERE snapshot_time=?");  
             for(int i = 0; i < overdueTimes.size(); i++) {
                 long snapshotTime = overdueTimes.get(i);
                 openActiveConnection();
-                Statement stmt = conn.createStatement();
+                //Statement stmt = conn.createStatement();
                 // remove from Statistics table
-                String statisticsUpdate = "DELETE FROM Statistics WHERE snapshot_time=" + snapshotTime;
-                statisticsOver -= stmt.executeUpdate(statisticsUpdate);
+                //String statisticsUpdate = "DELETE FROM Statistics WHERE snapshot_time=" + snapshotTime;
+				stmt.setLong(1,snapshotTime);
+                //statisticsOver -= stmt.executeUpdate(statisticsUpdate);
+				statisticsOver -= stmt.executeUpdate();
                 closeConnection();
             }
         } catch(Exception e) {
